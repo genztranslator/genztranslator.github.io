@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gen Z Translator</title>
+    <!-- Include Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
     <style>
-        /* General Reset */
         * {
             margin: 0;
             padding: 0;
@@ -14,24 +16,42 @@
         }
 
         body {
-            background: linear-gradient(135deg, #6e7dff, #88c8ff);
+            background-color: #181818; /* Dark background */
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            flex-direction: column; /* Column direction for the main content */
+            height: 100vh; /* Full viewport height */
             margin: 0;
+            color: #fff; /* White text */
+        }
+
+        #particles-js {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .content-wrapper {
+            flex: 1; /* Takes up remaining space, allowing footer to stay at the bottom */
+            display: flex;
+            justify-content: center; /* Centers content horizontally */
+            align-items: center; /* Centers content vertically */
+            padding: 20px;
+            overflow: auto; /* Allows scrolling if content overflows */
         }
 
         .container {
             display: flex;
             justify-content: space-between;
-            width: 100%;
             max-width: 900px;
-            background-color: #ffffff;
+            background-color: #333;
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
             transition: transform 0.3s ease-in-out;
+            width: 90%;
         }
 
         .container:hover {
@@ -43,36 +63,35 @@
             padding: 20px;
         }
 
-        /* Header styling */
         .header {
-            font-size: 36px;
+            font-size: 40px;
             font-weight: 700;
-            color: #333;
+            color: #f0f0f0;
             text-align: center;
             margin-bottom: 40px;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
 
-        /* Form Controls */
-        select, input, button {
+        input, select, button {
             width: 100%;
-            padding: 16px;
+            padding: 18px;
             margin-bottom: 25px;
             font-size: 16px;
             border-radius: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid #555;
             outline: none;
             transition: all 0.3s ease;
         }
 
-        select:focus, input:focus {
-            border: 1px solid #4d90fe;
-            background-color: #f0faff;
+        input:focus, select:focus {
+            border-color: #4d90fe;
+            background-color: #222;
         }
 
         input {
-            background-color: #fafafa;
+            background-color: #222;
+            color: #fff;
         }
 
         button {
@@ -91,56 +110,38 @@
             background-color: #357ae8;
         }
 
-        /* Output Area */
         .output-container {
             padding: 20px;
             border-radius: 12px;
-            background-color: #f8f9fa;
+            background-color: #444;
             min-height: 150px;
             display: flex;
             justify-content: center;
             align-items: center;
             box-shadow: inset 0 1px 10px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
+            position: relative;
         }
 
         .translation-output {
             font-size: 20px;
-            color: #333;
+            color: #f0f0f0;
             text-align: center;
             line-height: 1.4;
             word-wrap: break-word;
             min-height: 80px;
             padding: 20px;
             border-radius: 12px;
-            background-color: #ffffff;
+            background-color: #222;
             box-shadow: inset 0 1px 10px rgba(0, 0, 0, 0.1);
             font-weight: bold;
-            transition: all 0.3s ease;
         }
 
-        .copy-btn {
-            margin-top: 20px;
-            background-color: #00bcd4;
-            color: white;
-            font-weight: bold;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            display: none;
-        }
-
-        .copy-btn:hover {
-            background-color: #0097a7;
-        }
-
-        /* Styling for Contact Section */
         .contact {
             margin-top: 15px;
             font-size: 14px;
             text-align: center;
-            color: #333;
+            color: #f0f0f0;
         }
 
         .contact a {
@@ -152,7 +153,6 @@
             text-decoration: underline;
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -172,38 +172,63 @@
                 padding: 12px;
             }
         }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #333;
+            color: #f0f0f0;
+            width: 100%;
+            position: relative; /* Keeps footer at bottom */
+        }
+
+        footer .heart {
+            color: red;
+        }
+
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="column">
-        <div class="header">Gen Z Translator</div>
-        <input type="text" id="genZInput" placeholder="Enter text..." oninput="clearOutput()">
-        <button id="translateBtn">Translate</button>
-    </div>
-    <div class="column">
-        <div class="output-container">
-            <div class="translation-output" id="translationOutput">Translation will appear here...</div>
+<!-- Particles.js background -->
+<div id="particles-js"></div>
+
+<!-- Content wrapper for the main area and the footer -->
+<div class="content-wrapper">
+    <div class="container">
+        <div class="column">
+            <div class="header">Gen Z Translator</div>
+            <input type="text" id="genZInput" placeholder="Enter text..." oninput="clearOutput()">
+            <button id="translateBtn">Translate</button>
         </div>
-        <button class="copy-btn" id="copyButton" onclick="copyTranslation()">Copy Translation</button>
-        <div id="contactMessage" class="contact" style="display: none;">
-            If you have suggestions, please contact us at <a href="mailto:codename1121111@gmail.com">codename1121111@gmail.com</a>.
+        <div class="column">
+            <div class="output-container">
+                <div class="translation-output" id="translationOutput">Translation will appear here...</div>
+            </div>
+            <div id="contactMessage" class="contact" style="display: none;">
+                If you have suggestions, please contact us at <a href="mailto:codenamee1121111@gmail.com">codenamee1121111@gmail.com</a>.
+            </div>
         </div>
     </div>
 </div>
 
+<!-- Footer -->
+<footer>
+    Made with <span class="heart">♥</span> for you by Chip Hill
+</footer>
+
 <script>
     const slangDictionary = {
-        "yapping": "talking a lot",
-        "lit": "amazing or awesome",
-        "cap": "lie",
-        "no cap": "no lie",
-        "savage": "cool or ruthless",
-        "fam": "close friends or family",
-        "slay": "to perform exceptionally well",
-        "ghosted": "ignored someone",
-        "sus": "suspicious or shady",
+        "yapping": "Talking a lot",
+        "lit": "Amazing or awesome",
+        "cap": "A Lie",
+        "no cap": "No lie",
+        "savage": "Cool or ruthless",
+        "fam": "Close friends or family",
+        "slay": "To perform exceptionally well",
+        "ghosted": "Ignored someone",
+        "sus": "Suspicious or shady",
         "mood": "something relatable or how you're feeling",
         "bet": "okay or yes",
         "stan": "to strongly support or love someone/something",
@@ -236,13 +261,11 @@
     function translate() {
         const input = document.getElementById("genZInput").value.trim().toLowerCase();
         const translationOutput = document.getElementById("translationOutput");
-        const copyButton = document.getElementById("copyButton");
         const contactMessage = document.getElementById("contactMessage");
 
         // Reset outputs
         contactMessage.style.display = "none";
         translationOutput.innerText = "Translation will appear here...";
-        copyButton.style.display = 'none';
 
         if (!input) return;
 
@@ -250,35 +273,98 @@
             const foundTranslation = slangDictionary[input];
             if (foundTranslation) {
                 translationOutput.innerText = foundTranslation;
-                copyButton.style.display = 'inline-block';
             } else {
-                translationOutput.innerText = "Translation not found.";
+                translationOutput.innerText = "No translation found for that slang word.";
                 contactMessage.style.display = "block";
             }
         } catch (error) {
-            console.error("Error translating input:", error);
+            translationOutput.innerText = "An error occurred. Please try again.";
         }
     }
 
-    // Function to clear output when input is being modified
     function clearOutput() {
-        document.getElementById("translationOutput").innerText = "Translation will appear here...";
-        document.getElementById("contactMessage").style.display = "none";
+        const translationOutput = document.getElementById("translationOutput");
+        translationOutput.innerText = "Translation will appear here...";
     }
 
-    // Function to copy the translated text to clipboard
-    function copyTranslation() {
-        const translation = document.getElementById("translationOutput").innerText;
-        const textarea = document.createElement('textarea');
-        textarea.value = translation;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-    }
-
-    // Add event listener for the translate button
     document.getElementById("translateBtn").addEventListener("click", translate);
+
+    particlesJS("particles-js", {
+        particles: {
+            number: {
+                value: 80,
+                density: {
+                    enable: true,
+                    value_area: 800
+                }
+            },
+            color: {
+                value: "#ffffff"
+            },
+            shape: {
+                type: "circle",
+                stroke: {
+                    width: 0,
+                    color: "#000000"
+                }
+            },
+            opacity: {
+                value: 0.5,
+                random: true,
+                anim: {
+                    enable: true,
+                    speed: 1,
+                    opacity_min: 0.1,
+                    sync: false
+                }
+            },
+            size: {
+                value: 3,
+                random: true,
+                anim: {
+                    enable: false,
+                    speed: 4,
+                    size_min: 0.1,
+                    sync: false
+                }
+            },
+            line_linked: {
+                enable: true,
+                distance: 150,
+                color: "#ffffff",
+                opacity: 0.4,
+                width: 1
+            },
+            move: {
+                enable: true,
+                speed: 2,
+                direction: "none",
+                random: false,
+                straight: false,
+                out_mode: "out",
+                bounce: false,
+                attract: {
+                    enable: false,
+                    rotateX: 600,
+                    rotateY: 1200
+                }
+            }
+        },
+        interactivity: {
+            detect_on: "canvas",
+            events: {
+                onhover: {
+                    enable: true,
+                    mode: "repulse"
+                },
+                onclick: {
+                    enable: true,
+                    mode: "push"
+                }
+            }
+        },
+        retina_detect: true
+    });
 </script>
 
 </body>

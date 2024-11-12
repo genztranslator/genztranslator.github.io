@@ -153,26 +153,6 @@
             text-decoration: underline;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                padding: 20px;
-            }
-
-            .column {
-                padding: 10px;
-            }
-
-            .header {
-                font-size: 30px;
-                margin-bottom: 20px;
-            }
-
-            input, button {
-                padding: 12px;
-            }
-        }
-
         footer {
             text-align: center;
             margin-top: 20px;
@@ -187,12 +167,88 @@
             color: red;
         }
 
+        /* Book icon in the top right corner */
+        .book-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 40px;
+            color: #f0f0f0;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 15;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: #222;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 80%;
+            max-height: 80%;
+            overflow-y: auto;
+            color: #f0f0f0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .modal-header {
+            font-size: 30px;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 35px;
+            color: #f0f0f0;
+            cursor: pointer;
+        }
+
+        .word-list {
+            font-size: 20px;
+            list-style-type: none;
+            padding-left: 0;
+            margin-top: 10px;
+        }
+
+        .word-list li {
+            margin: 12px 0;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .word-list li:hover {
+            background-color: #4d90fe;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
 <!-- Particles.js background -->
 <div id="particles-js"></div>
+
+<!-- Book icon -->
+<i class="fas fa-book book-icon" onclick="openModal()"></i>
 
 <!-- Content wrapper for the main area and the footer -->
 <div class="content-wrapper">
@@ -217,6 +273,15 @@
 <footer>
     Made with <span class="heart">♥</span> for you by Chip Hill
 </footer>
+
+<!-- Modal -->
+<div class="modal" id="slangModal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <div class="modal-header">List of Slang Words</div>
+        <ul class="word-list" id="wordList"></ul>
+    </div>
+</div>
 
 <script>
     const slangDictionary = {
@@ -260,37 +325,45 @@
         "Fanum Tax": "stealing food from a friend or family."
     };
 
-    function translate() {
-        const input = document.getElementById("genZInput").value.trim().toLowerCase();
-        const translationOutput = document.getElementById("translationOutput");
-        const contactMessage = document.getElementById("contactMessage");
-
-        // Reset outputs
-        contactMessage.style.display = "none";
-        translationOutput.innerText = "Translation will appear here...";
-
-        if (!input) return;
-
-        try {
-            const foundTranslation = slangDictionary[input];
-            if (foundTranslation) {
-                translationOutput.innerText = foundTranslation;
-            } else {
-                translationOutput.innerText = "No translation found for that slang word.";
-                contactMessage.style.display = "block";
-            }
-        } catch (error) {
-            translationOutput.innerText = "An error occurred. Please try again.";
+    // Open the modal with the slang words list
+    function openModal() {
+        const wordList = document.getElementById("wordList");
+        wordList.innerHTML = "";
+        for (let word in slangDictionary) {
+            const listItem = document.createElement("li");
+            listItem.textContent = word;
+            wordList.appendChild(listItem);
         }
+        document.getElementById("slangModal").style.display = "flex";
     }
 
+    // Close the modal
+    function closeModal() {
+        document.getElementById("slangModal").style.display = "none";
+    }
+
+    // Translate the input text
+    document.getElementById("translateBtn").addEventListener("click", function() {
+        const inputText = document.getElementById("genZInput").value.toLowerCase();
+        const outputDiv = document.getElementById("translationOutput");
+        let translation = inputText;
+
+        for (let slang in slangDictionary) {
+            const regex = new RegExp("\\b" + slang + "\\b", "gi");
+            translation = translation.replace(regex, slangDictionary[slang]);
+        }
+
+        outputDiv.textContent = translation;
+    });
+
+    // Clear the output when user types in the input field
     function clearOutput() {
-        const translationOutput = document.getElementById("translationOutput");
-        translationOutput.innerText = "Translation will appear here...";
+        const outputDiv = document.getElementById("translationOutput");
+        outputDiv.textContent = "Translation will appear here...";
     }
+</script>
 
-    document.getElementById("translateBtn").addEventListener("click", translate);
-
+<script>
     particlesJS("particles-js", {
         particles: {
             number: {
@@ -300,22 +373,22 @@
                     value_area: 800
                 }
             },
-            color: {
-                value: "#ffffff"
-            },
             shape: {
                 type: "circle",
                 stroke: {
                     width: 0,
-                    color: "#000000"
+                    color: "#FFFFFF"
                 }
+            },
+            color: {
+                value: "#FFFFFF"
             },
             opacity: {
                 value: 0.5,
                 random: true,
                 anim: {
                     enable: true,
-                    speed: 1,
+                    speed: 0.1,
                     opacity_min: 0.1,
                     sync: false
                 }
@@ -324,8 +397,8 @@
                 value: 3,
                 random: true,
                 anim: {
-                    enable: false,
-                    speed: 4,
+                    enable: true,
+                    speed: 2,
                     size_min: 0.1,
                     sync: false
                 }
@@ -333,16 +406,15 @@
             line_linked: {
                 enable: true,
                 distance: 150,
-                color: "#ffffff",
+                color: "#FFFFFF",
                 opacity: 0.4,
                 width: 1
             },
             move: {
                 enable: true,
-                speed: 2,
+                speed: 3,
                 direction: "none",
-                random: false,
-                straight: false,
+                random: true,
                 out_mode: "out",
                 bounce: false,
                 attract: {
@@ -364,8 +436,7 @@
                     mode: "push"
                 }
             }
-        },
-        retina_detect: true
+        }
     });
 </script>
 

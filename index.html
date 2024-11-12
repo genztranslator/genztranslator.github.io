@@ -326,116 +326,72 @@
         "Skibidi": " The word is used by Gen Alpha Or Gen Z to start senseless conversations, most often to compete with other people."
     };
 
-    // Open the modal with the slang words list
-    function openModal() {
-        const wordList = document.getElementById("wordList");
-        wordList.innerHTML = "";
-        for (let word in slangDictionary) {
-            const listItem = document.createElement("li");
-            listItem.textContent = word;
-            wordList.appendChild(listItem);
-        }
-        document.getElementById("slangModal").style.display = "flex";
-    }
-
-    // Close the modal
-    function closeModal() {
-        document.getElementById("slangModal").style.display = "none";
-    }
-
-    // Translate the input text
+    // Handle translation
     document.getElementById("translateBtn").addEventListener("click", function() {
         const inputText = document.getElementById("genZInput").value.toLowerCase();
         const outputDiv = document.getElementById("translationOutput");
         let translation = inputText;
+        let foundSlang = false;
 
         for (let slang in slangDictionary) {
             const regex = new RegExp("\\b" + slang + "\\b", "gi");
+            if (regex.test(inputText)) {
+                foundSlang = true;
+            }
             translation = translation.replace(regex, slangDictionary[slang]);
+        }
+
+        // If no slang word is found, display "Translation not found"
+        if (!foundSlang) {
+            translation = "Translation not found. If you have suggestions, please contact us.";
+            document.getElementById("contactMessage").style.display = "block"; // Show contact message
+        } else {
+            document.getElementById("contactMessage").style.display = "none"; // Hide contact message
         }
 
         outputDiv.textContent = translation;
     });
 
-    // Clear the output when user types in the input field
+    // Clear output when input changes
     function clearOutput() {
-        const outputDiv = document.getElementById("translationOutput");
-        outputDiv.textContent = "Translation will appear here...";
+        document.getElementById("translationOutput").textContent = "Translation will appear here...";
     }
-</script>
 
-<script>
+    // Modal functions
+    function openModal() {
+        document.getElementById('slangModal').style.display = 'flex';
+        const wordList = document.getElementById('wordList');
+        wordList.innerHTML = '';
+        for (let slang in slangDictionary) {
+            const li = document.createElement('li');
+            li.textContent = `${slang} - ${slangDictionary[slang]}`;
+            wordList.appendChild(li);
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('slangModal').style.display = 'none';
+    }
+
+    // Particles.js settings
     particlesJS("particles-js", {
-        particles: {
-            number: {
-                value: 80,
-                density: {
-                    enable: true,
-                    value_area: 800
+        "particles": {
+            "number": {
+                "value": 80,
+                "density": {
+                    "enable": true,
+                    "value_area": 800
                 }
             },
-            shape: {
-                type: "circle",
-                stroke: {
-                    width: 0,
-                    color: "#FFFFFF"
-                }
+            "size": {
+                "value": 3
             },
-            color: {
-                value: "#FFFFFF"
+            "move": {
+                "enable": true,
+                "speed": 6
             },
-            opacity: {
-                value: 0.5,
-                random: true,
-                anim: {
-                    enable: true,
-                    speed: 0.1,
-                    opacity_min: 0.1,
-                    sync: false
-                }
-            },
-            size: {
-                value: 3,
-                random: true,
-                anim: {
-                    enable: true,
-                    speed: 2,
-                    size_min: 0.1,
-                    sync: false
-                }
-            },
-            line_linked: {
-                enable: true,
-                distance: 150,
-                color: "#FFFFFF",
-                opacity: 0.4,
-                width: 1
-            },
-            move: {
-                enable: true,
-                speed: 3,
-                direction: "none",
-                random: true,
-                out_mode: "out",
-                bounce: false,
-                attract: {
-                    enable: false,
-                    rotateX: 600,
-                    rotateY: 1200
-                }
-            }
-        },
-        interactivity: {
-            detect_on: "canvas",
-            events: {
-                onhover: {
-                    enable: true,
-                    mode: "repulse"
-                },
-                onclick: {
-                    enable: true,
-                    mode: "push"
-                }
+            "shape": {
+                "type": "circle"
             }
         }
     });

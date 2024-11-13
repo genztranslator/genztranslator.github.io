@@ -16,12 +16,12 @@
         }
 
         body {
-            background-color: #181818; /* Dark background */
+            background-color: #ffffff; /* White background */
             display: flex;
             flex-direction: column; /* Column direction for the main content */
             height: 100vh; /* Full viewport height */
             margin: 0;
-            color: #fff; /* White text */
+            color: #000; /* Black text */
         }
 
         #particles-js {
@@ -46,12 +46,13 @@
             display: flex;
             justify-content: space-between;
             max-width: 900px;
-            background-color: #333;
+            background-color: #f9f9f9; /* Light background for the container */
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease-in-out;
             width: 90%;
+            border: 2px solid #000; /* Black border */
         }
 
         .container:hover {
@@ -66,7 +67,7 @@
         .header {
             font-size: 40px;
             font-weight: 700;
-            color: #f0f0f0;
+            color: #333; /* Dark color for header */
             text-align: center;
             margin-bottom: 40px;
             text-transform: uppercase;
@@ -79,19 +80,16 @@
             margin-bottom: 25px;
             font-size: 16px;
             border-radius: 10px;
-            border: 1px solid #555;
+            border: 1px solid #000; /* Black border for inputs and button */
             outline: none;
             transition: all 0.3s ease;
+            background-color: #fff; /* White background for inputs */
+            color: #333; /* Dark text for inputs */
         }
 
         input:focus, select:focus {
             border-color: #4d90fe;
-            background-color: #222;
-        }
-
-        input {
-            background-color: #222;
-            color: #fff;
+            background-color: #f1f1f1; /* Light gray background on focus */
         }
 
         button {
@@ -113,7 +111,7 @@
         .output-container {
             padding: 20px;
             border-radius: 12px;
-            background-color: #444;
+            background-color: #f1f1f1;
             min-height: 150px;
             display: flex;
             justify-content: center;
@@ -121,18 +119,19 @@
             box-shadow: inset 0 1px 10px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
             position: relative;
+            border: 2px solid #000; /* Black border */
         }
 
         .translation-output {
             font-size: 20px;
-            color: #f0f0f0;
+            color: #333;
             text-align: center;
             line-height: 1.4;
             word-wrap: break-word;
             min-height: 80px;
             padding: 20px;
             border-radius: 12px;
-            background-color: #222;
+            background-color: #fff;
             box-shadow: inset 0 1px 10px rgba(0, 0, 0, 0.1);
             font-weight: bold;
         }
@@ -141,7 +140,7 @@
             margin-top: 15px;
             font-size: 14px;
             text-align: center;
-            color: #f0f0f0;
+            color: #333;
         }
 
         .contact a {
@@ -157,10 +156,11 @@
             text-align: center;
             margin-top: 20px;
             padding: 10px;
-            background-color: #333;
-            color: #f0f0f0;
+            background-color: #f9f9f9; /* Light background for footer */
+            color: #333;
             width: 100%;
             position: relative; /* Keeps footer at bottom */
+            border-top: 2px solid #000; /* Black line for footer */
         }
 
         footer .heart {
@@ -173,7 +173,7 @@
             top: 20px;
             right: 20px;
             font-size: 40px;
-            color: #f0f0f0;
+            color: #333; /* Dark color for icon */
             cursor: pointer;
             z-index: 10;
         }
@@ -195,15 +195,16 @@
         }
 
         .modal-content {
-            background-color: #222;
+            background-color: #f9f9f9;
             padding: 30px;
             border-radius: 15px;
             max-width: 80%;
             max-height: 80%;
             overflow-y: auto;
-            color: #f0f0f0;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            color: #333;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             text-align: center;
+            border: 2px solid #000; /* Black border */
         }
 
         .modal-header {
@@ -217,7 +218,7 @@
             top: 10px;
             right: 10px;
             font-size: 35px;
-            color: #f0f0f0;
+            color: #333;
             cursor: pointer;
         }
 
@@ -231,7 +232,7 @@
         .word-list li {
             margin: 12px 0;
             padding: 10px;
-            background-color: #333;
+            background-color: #f9f9f9;
             border-radius: 8px;
             transition: background-color 0.3s ease;
         }
@@ -263,7 +264,7 @@
                 <div class="translation-output" id="translationOutput">Translation will appear here...</div>
             </div>
             <div id="contactMessage" class="contact" style="display: none;">
-                If you have suggestions, please contact us at <a href="mailto:codenamee1121111@gmail.com">codenamee1121111@gmail.com</a>.
+                If you have suggestions, please contact us at <a href="mailto:codename1121111@gmail.com">codename1121111@gmail.com</a>.
             </div>
         </div>
     </div>
@@ -326,54 +327,45 @@
         "Skibidi": " The word is used by Gen Alpha Or Gen Z to start senseless conversations, most often to compete with other people."
     };
 
-    // Handle translation
-    document.getElementById("translateBtn").addEventListener("click", function() {
-        const inputText = document.getElementById("genZInput").value.toLowerCase();
-        const outputDiv = document.getElementById("translationOutput");
-        let translation = inputText;
-        let foundSlang = false;
+    document.getElementById('translateBtn').addEventListener('click', function () {
+        const inputText = document.getElementById('genZInput').value.toLowerCase();
+        const outputText = slangDictionary[inputText] || "No translation found. Try again!";
+        document.getElementById('translationOutput').textContent = outputText;
 
-        for (let slang in slangDictionary) {
-            const regex = new RegExp("\\b" + slang + "\\b", "gi");
-            if (regex.test(inputText)) {
-                foundSlang = true;
-            }
-            translation = translation.replace(regex, slangDictionary[slang]);
-        }
-
-        // If no slang word is found, display "Translation not found"
-        if (!foundSlang) {
-            translation = "Translation not found. If you have suggestions, please contact us.";
-            document.getElementById("contactMessage").style.display = "block"; // Show contact message
+        // Show the contact message if translation not found
+        if (outputText === "No translation found. Try again!") {
+            document.getElementById('contactMessage').style.display = 'block';
         } else {
-            document.getElementById("contactMessage").style.display = "none"; // Hide contact message
+            document.getElementById('contactMessage').style.display = 'none';
         }
-
-        outputDiv.textContent = translation;
     });
 
-    // Clear output when input changes
     function clearOutput() {
-        document.getElementById("translationOutput").textContent = "Translation will appear here...";
+        document.getElementById('translationOutput').textContent = "Translation will appear here...";
+        document.getElementById('contactMessage').style.display = 'none';
     }
 
-    // Modal functions
     function openModal() {
-        document.getElementById('slangModal').style.display = 'flex';
+        const modal = document.getElementById('slangModal');
         const wordList = document.getElementById('wordList');
         wordList.innerHTML = '';
-        for (let slang in slangDictionary) {
+        for (const slang in slangDictionary) {
             const li = document.createElement('li');
-            li.textContent = `${slang}`;
+            li.textContent = slang;
+            li.onclick = function () {
+                document.getElementById('genZInput').value = slang;
+                document.getElementById('translationOutput').textContent = slangDictionary[slang];
+            };
             wordList.appendChild(li);
         }
+        modal.style.display = 'flex';
     }
 
     function closeModal() {
         document.getElementById('slangModal').style.display = 'none';
     }
 
-    // Particles.js settings
+    // Particles.js settings with black lines
     particlesJS("particles-js", {
         "particles": {
             "number": {
@@ -382,6 +374,9 @@
                     "enable": true,
                     "value_area": 800
                 }
+            },
+            "color": {
+                "value": "#000" // Black particles
             },
             "size": {
                 "value": 3
@@ -392,6 +387,13 @@
             },
             "shape": {
                 "type": "circle"
+            },
+            "line_linked": {
+                "enable": true,
+                "distance": 150,
+                "color": "#000", // Black lines
+                "opacity": 0.4,
+                "width": 1
             }
         }
     });
